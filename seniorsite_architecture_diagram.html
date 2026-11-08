@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeniorSite AI - System Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e2e8f0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .layer {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        
+        .layer-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .layer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .layer-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+        
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .component {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .component:hover {
+            transform: translateY(-4px);
+            border-color: rgba(148, 163, 184, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .component-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .component-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+        
+        .component-tech {
+            color: #60a5fa;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .component-details {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+        
+        /* Layer-specific colors */
+        .layer-external .layer-number { background: #3b82f6; }
+        .layer-external .component-icon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        
+        .layer-1 .layer-number { background: #22c55e; }
+        .layer-1 .component-icon { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        
+        .layer-storage .layer-number { background: #f59e0b; }
+        .layer-storage .component-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        
+        .layer-2 .layer-number { background: #ec4899; }
+        .layer-2 .component-icon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        
+        .layer-3 .layer-number { background: #8b5cf6; }
+        .layer-3 .component-icon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        
+        .layer-ui .layer-number { background: #64748b; }
+        .layer-ui .component-icon { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
+        
+        .flow-arrows {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        
+        .arrow {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.5rem;
+        }
+        
+        .tech-stack {
+            margin-top: 40px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        
+        .tech-stack h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .tech-item {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .tech-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-python { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .badge-db { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .badge-ai { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .badge-ui { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SeniorSite AI</h1>
+            <p>System Architecture for Senior Housing Site Selection</p>
+        </div>
+        
+        <div class="architecture">
+            <!-- External Data Sources -->
+            <div class="layer layer-external">
+                <div class="layer-header">
+                    <div class="layer-number">⬇</div>
+                    <div class="layer-title">External Data Sources</div>
+                    <div class="layer-desc">Public APIs & Bulk Downloads</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">📊</div>
+                        <div class="component-name">Census Bureau API</div>
+                        <div class="component-tech">REST API (Free Key)</div>
+                        <div class="component-details">ACS 5-Year Demographics, 65+ Population, Income by Age, Household Composition</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🏥</div>
+                        <div class="component-name">CMS Provider Data</div>
+                        <div class="component-tech">REST API (No Auth)</div>
+                        <div class="component-details">Healthcare Facilities, Nursing Homes, Quality Ratings, Bed Counts</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🏠</div>
+                        <div class="component-name">Zillow Research</div>
+                        <div class="component-tech">CSV Download</div>
+                        <div class="component-details">ZHVI Home Values, ZORI Rent Index, ZIP-level Monthly Updates</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📈</div>
+                        <div class="component-name">Texas Demographic Center</div>
+                        <div class="component-tech">CSV Download</div>
+                        <div class="component-details">2024-2060 Population Projections, Migration Scenarios by County</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🗂️</div>
+                        <div class="component-name">County Appraisal Districts</div>
+                        <div class="component-tech">Bulk Download</div>
+                        <div class="component-details">Harris, Dallas, Tarrant CAD Property Records, Land Values</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrows">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- Layer 1: Data Aggregation -->
+            <div class="layer layer-1">
+                <div class="layer-header">
+                    <div class="layer-number">1</div>
+                    <div class="layer-title">Data Aggregation Layer</div>
+                    <div class="layer-desc">Ingestion, Normalization, Geographic Standardization</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">⏰</div>
+                        <div class="component-name">Scheduler</div>
+                        <div class="component-tech">APScheduler</div>
+                        <div class="component-details">Configurable intervals: Daily (housing), Quarterly (CAD), Annual (Census)</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📥</div>
+                        <div class="component-name">Ingestion Module</div>
+                        <div class="component-tech">Python + Requests</div>
+                        <div class="component-details">API calls, CSV parsing, bulk file handling with retry logic</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🔄</div>
+                        <div class="component-name">Normalization Engine</div>
+                        <div class="component-tech">Pandas</div>
+                        <div class="component-details">Schema alignment, data type casting, null handling, deduplication</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🌐</div>
+                        <div class="component-name">Geographic Standardization</div>
+                        <div class="component-tech">FIPS Codes</div>
+                        <div class="component-details">ZIP ↔ Census Tract ↔ County mapping, consistent geographic keys</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrows">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- Storage Layer -->
+            <div class="layer layer-storage">
+                <div class="layer-header">
+                    <div class="layer-number">💾</div>
+                    <div class="layer-title">Local Storage Layer</div>
+                    <div class="layer-desc">Embedded Databases, No Server Required</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">🦆</div>
+                        <div class="component-name">DuckDB</div>
+                        <div class="component-tech">Primary Analytical DB</div>
+                        <div class="component-details">Columnar storage, SQL analytics, 10x faster than SQLite for aggregations</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📁</div>
+                        <div class="component-name">SQLite</div>
+                        <div class="component-tech">Metadata Store</div>
+                        <div class="component-details">Configuration, query history, user preferences, API cache status</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📂</div>
+                        <div class="component-name">File Cache</div>
+                        <div class="component-tech">Local Directory</div>
+                        <div class="component-details">Raw CSV/JSON archives, versioned downloads, offline access</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrows">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- Layer 2: Analytics Engine -->
+            <div class="layer layer-2">
+                <div class="layer-header">
+                    <div class="layer-number">2</div>
+                    <div class="layer-title">Analytics Engine</div>
+                    <div class="layer-desc">Industry-Standard Metrics & Scoring</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">📐</div>
+                        <div class="component-name">Metrics Calculator</div>
+                        <div class="component-tech">Python Functions</div>
+                        <div class="component-details">Penetration rates, demand projections, income qualification ratios</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📍</div>
+                        <div class="component-name">Proximity Analyzer</div>
+                        <div class="component-tech">Haversine Distance</div>
+                        <div class="component-details">Healthcare within 10mi, competitor density, drive-time estimation</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">⭐</div>
+                        <div class="component-name">Site Scoring Engine</div>
+                        <div class="component-tech">Weighted Composite</div>
+                        <div class="component-details">Configurable weights, 0-100 index, multi-factor ranking</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrows">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- Layer 3: NLP Interface -->
+            <div class="layer layer-3">
+                <div class="layer-header">
+                    <div class="layer-number">3</div>
+                    <div class="layer-title">Natural Language Interface</div>
+                    <div class="layer-desc">Conversational Queries via Local LLM</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">🦙</div>
+                        <div class="component-name">Ollama + Llama 3.1</div>
+                        <div class="component-tech">Local LLM Server</div>
+                        <div class="component-details">8B parameter model, runs on 8GB RAM, no API costs, offline capable</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🔗</div>
+                        <div class="component-name">LangChain Orchestrator</div>
+                        <div class="component-tech">Query Pipeline</div>
+                        <div class="component-details">Intent classification, tool routing, context management</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🔍</div>
+                        <div class="component-name">SQL Generator</div>
+                        <div class="component-tech">Text-to-SQL</div>
+                        <div class="component-details">Natural language → DuckDB queries with schema awareness</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">💬</div>
+                        <div class="component-name">Response Narrator</div>
+                        <div class="component-tech">Result Synthesis</div>
+                        <div class="component-details">Converts data results to actionable insights and summaries</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrows">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- UI Layer -->
+            <div class="layer layer-ui">
+                <div class="layer-header">
+                    <div class="layer-number">🖥️</div>
+                    <div class="layer-title">User Interface</div>
+                    <div class="layer-desc">Streamlit Dashboard</div>
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-icon">💬</div>
+                        <div class="component-name">Chat Interface</div>
+                        <div class="component-tech">st.chat_input</div>
+                        <div class="component-details">Conversational query panel with message history</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📊</div>
+                        <div class="component-name">Data Visualization</div>
+                        <div class="component-tech">Plotly + Altair</div>
+                        <div class="component-details">Interactive charts, demographic comparisons, trend analysis</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">🗺️</div>
+                        <div class="component-name">Interactive Map</div>
+                        <div class="component-tech">Folium</div>
+                        <div class="component-details">Site locations, healthcare facilities, competitor markers</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-icon">📤</div>
+                        <div class="component-name">Export Module</div>
+                        <div class="component-tech">CSV + PDF</div>
+                        <div class="component-details">Download filtered results, generate site reports</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tech Stack Summary -->
+        <div class="tech-stack">
+            <h2>Technology Stack Summary</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-badge badge-python">Python 3.11</span>
+                    <span>Primary Language</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-db">DuckDB</span>
+                    <span>Analytics Database</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-db">SQLite</span>
+                    <span>Metadata Store</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ai">Ollama</span>
+                    <span>Local LLM Host</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ai">Llama 3.1 8B</span>
+                    <span>Language Model</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ai">LangChain</span>
+                    <span>AI Orchestration</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ui">Streamlit</span>
+                    <span>Web Interface</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ui">Plotly</span>
+                    <span>Visualization</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-ui">Folium</span>
+                    <span>Mapping</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge badge-python">Pandas</span>
+                    <span>Data Processing</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>SeniorSite AI • AI-Powered Site Selection for Institutional Senior Housing Developers</p>
+            <p>All components run locally • Zero subscription costs • Offline capable</p>
+        </div>
+    </div>
+</body>
+</html>

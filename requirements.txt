@@ -1,0 +1,31 @@
+# SeniorSite AI - Requirements
+# Install with: pip install -r requirements.txt
+
+# Core Data Processing
+pandas>=2.1.0
+numpy>=1.26.0
+
+# Database (use recent version with pre-built Windows wheels)
+duckdb>=1.0.0
+
+# Web Interface
+streamlit>=1.29.0
+
+# Visualization
+plotly>=5.18.0
+folium>=0.15.0
+streamlit-folium>=0.15.0
+
+# AI/LLM Integration
+langchain>=0.3.0
+langchain-community>=0.3.0
+langchain-ollama>=0.2.0
+
+# API and Data Fetching
+requests>=2.31.0
+
+# Geospatial calculations (no GIS files needed)
+geopy>=2.4.0
+
+# Utilities
+python-dotenv>=1.0.0
